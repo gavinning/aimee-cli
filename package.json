@@ -1,0 +1,29 @@
+{
+  "name": "aimee-cli",
+  "description": "Aimeejs命令行工具",
+  "main": "aimee.js",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "aimee -v"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gavinning/aimee-cli.git"
+  },
+  "keywords": [
+    "aimee",
+    "aimee-cli"
+  ],
+  "author": "gavinning",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/gavinning/aimee-cli/issues"
+  },
+  "homepage": "https://github.com/gavinning/aimee-cli",
+  "dependencies": {
+    "commander": "^2.8.1",
+    "linco.lab": "0.0.13",
+    "vpm-config": "^1.0.0",
+    "vpm-package": "^1.0.0"
+  }
+}
