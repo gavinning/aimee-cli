@@ -1,9 +1,12 @@
 var path = require('path');
 var home = process.env.HOME;
 var folder = '.aimee';
+var templateFolder = path.join(__dirname, 'template');
 
 function config() {
     return {
+
+        charset: 'utf-8',
 
         dir: {
             // 项目真实目录
@@ -25,13 +28,31 @@ function config() {
             modules: 'modules'
         },
 
-        // 创建配置
+        // 模板文件，用于命令创建文件的模板
+        template: {
+            'html'          : path.join(templateFolder, 'index.html'),
+            'appjs'         : path.join(templateFolder, 'app/app.js'),
+            'appjade'       : path.join(templateFolder, 'app/app.jade'),
+            'appless'       : path.join(templateFolder, 'app/app.less'),
+            'appjsonjs'     : path.join(templateFolder, 'app/app.json.js'),
+            'pagejs'        : path.join(templateFolder, 'page/page.js'),
+            'pagejade'      : path.join(templateFolder, 'page/page.jade'),
+            'pagejsonjs'    : path.join(templateFolder, 'page/page.json.js'),
+        },
+
+        types: {
+
+        },
+
+        // 创建配置 => aimee create [options] <appname>
         create: {
 
+            // aimee init
             // 用于初始化缓存目录 ~/.aimee
             init: {
                 name: 'init',
-                type: 'init',
+                type: 'folder',
+                flag: 'cache',
                 content: [
                     {
                         // 文件名称
@@ -48,28 +69,69 @@ function config() {
 
             // 用于创建项目模型
             project: {
+                // 项目名称，会被命令行参数覆盖
                 name: 'project',
-                type: 'project',
-                flag: '--project',
+                // 文件类型，文件创建依据
+                type: 'folder',
+                // Aimee标记
+                flag: 'project',
+                // Aimee.app依赖
+                mods: ['aimee'],
+                // 文件内容
                 content: [
                     {
                         name: 'index.html',
                         type: 'html'
                     },
                     {
+                        name: 'uzconfig.js',
+                        type: 'text'
+                    },
+                    {
+                        name: 'js',
+                        type: 'folder'
+                    },
+                    {
+                        name: 'css',
+                        type: 'folder',
+                        content: [
+                            {
+                                name: 'lib',
+                                type: 'folder',
+                                content: [
+                                    {
+                                        name: 'base.less',
+                                        type: 'text'
+                                    },
+                                    {
+                                        name: 'reset.less',
+                                        type: 'text'
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        name: 'images',
+                        type: 'folder'
+                    },
+                    {
                         name: 'pages',
                         type: 'folder',
-                        content: 'home'
+                        content: [
+                            {
+                                name: 'home',
+                                flag: 'page',
+                            }
+                        ]
                     },
                     {
                         name: 'modules',
-                        type: 'folder',
-                        content: 'aimee pm page app'
+                        type: 'folder'
                     },
                     {
                         name: 'widget',
-                        type: 'folder',
-                        content: 'header footer tips'
+                        type: 'folder'
                     }
                 ]
             }
