@@ -61,8 +61,10 @@ this.create = function(conf){
     // Text File
     conf.type === 'text' && this.cli.create.file(conf.path);
 
-    // Virtual Page
-    conf.flag === 'page' && this.cli.create.page(conf.path);
+    // Aimee Page
+    conf.flag === 'page' && this.cli.create.app(conf.path, 'page');
+    // Aimee app
+    conf.flag === 'app' && this.cli.create.app(conf.path, 'app');
 
     // 创建子级
     conf.content && conf.content.forEach(function(item){
