@@ -3,6 +3,7 @@ var path = require('path');
 var touch = require('touch');
 var commander = require('commander');
 var config = require('vpm-config');
+var color = require('bash-color');
 
 
 // 设置配置文件路径，必须优先独立配置
@@ -51,7 +52,7 @@ this.create = function(conf){
     if(conf.flag === 'project'){
         // 创建 project > src
         conf.path = path.join(conf.path, 'src');
-        console.log('Start create', conf.flag, conf.name, '...');
+        exports.log('Start  create', color.purple(conf.flag), color.green(conf.name), '...');
     }
 
     // Folder
@@ -73,24 +74,22 @@ this.create = function(conf){
     })
 }
 
+/**
+ * 返回带有时间戳的日志
+ * @param   {String}  msg 日志信息
+ * @return  {String}      返回带有时间戳的日志
+ * @example [example] this.log('123') => 10:23:20 > 123
+ */
+this.log = function(msg){
+    var arr = [];
+    arr = arr.slice.call(arguments);
+    arr.unshift('>');
+    arr.unshift(lib.now('hh:mm:ss'));
+    console.log.apply(null, arr);
+}
+
 // 注册命令
 this.reg('create')
 this.reg('publish')
 this.reg('install')
 this.reg('remove')
-
-
-//
-// commander.version('1.0.0');
-//
-// commander
-//     .command('create')
-//     .description('create aimee app')
-//     .option('-P, --project [name]', 'create project', cli.create.project)
-//     .option('-p, --page    [name]', 'create page', cli.create.page)
-//     .option('-w, --widget  [name]', 'create widget', cli.create.widget)
-//     .action(function(op){
-//         [].forEach.call(arguments, function(item){
-//             item.parent ? console.log('options') : console.log(item)
-//         })
-//     })

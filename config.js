@@ -28,7 +28,7 @@ function config() {
             modules: 'modules'
         },
 
-        // 模板文件，用于命令创建文件的模板
+        // 模板文件，用于命令创建Aimee对象的模板
         template: {
             'html'          : path.join(templateFolder, 'index.html'),
             'appjs'         : path.join(templateFolder, 'app/app.js'),
@@ -67,15 +67,15 @@ function config() {
                 ]
             },
 
-            // 用于创建项目模型
+            // Aimee-project配置项，aimee create命令会根据此配置创建Aimee-project
             project: {
                 // 项目名称，会被命令行参数覆盖
                 name: 'project',
                 // 文件类型，文件创建依据
                 type: 'folder',
-                // Aimee标记
+                // Aimee标记，用于创建特殊的Aimee对象，例如Aimee-page, Aimee-app
                 flag: 'project',
-                // Aimee.app依赖
+                // Aimee.app依赖的模块，创建项目后会自动安装
                 mods: ['aimee'],
                 // 文件内容
                 content: [
@@ -131,7 +131,13 @@ function config() {
                     },
                     {
                         name: 'widget',
-                        type: 'folder'
+                        type: 'folder',
+                        content: [
+                            {
+                                name: 'header',
+                                flag: 'app'
+                            }
+                        ]
                     }
                 ]
             }
