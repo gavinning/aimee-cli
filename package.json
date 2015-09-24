@@ -23,7 +23,7 @@
   "dependencies": {
     "bash-color": "0.0.3",
     "commander": "^2.8.1",
-    "linco.lab": "0.0.13",
+    "linco.lab": "~0.0.13",
     "rmdir": "^1.1.0",
     "touch": "^1.0.0",
     "vpm-config": "^1.0.0",

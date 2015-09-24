@@ -15,7 +15,7 @@ if(!lib.isDir(config.get('dir.cache'))){
     return console.error('Error: 没有发现缓存目录')
 }
 
-// 命令池
+// 命令池，缓存已注册命令
 this.cli = {};
 
 // 命令执行入口
@@ -94,7 +94,7 @@ this.url = function(type, search){
     // 获取接口信息
     options = lib.extend(true, {}, config.get('url'));
     // 添加模块名参数
-    options.search = search;
+    options.search = search.indexOf('?') === 0 ? search : ('?' + search);
     // 指定接口类型
     options.pathname = config.get('url.pathname') + type;
     // 返回格式化后的接口
