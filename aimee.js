@@ -4,7 +4,7 @@ var touch = require('touch');
 var commander = require('commander');
 var config = require('vpm-config');
 var color = require('bash-color');
-
+var uri = require('url');
 
 // 设置配置文件路径，必须优先独立配置
 config.set('config', path.join(__dirname, 'config.js'));
@@ -40,7 +40,7 @@ this.reg = function(id){
             cmd.reg(commander);
             cmd.aimee = this;
             // 注册命令到命令池
-            this.cli[cmd.alias] = cmd;
+            this.cli[cmd.alias || cmd.name] = cmd;
         }
     }
     return this;
@@ -88,8 +88,22 @@ this.log = function(msg){
     console.log.apply(null, arr);
 }
 
+// 返回接口
+this.url = function(type, search){
+    var options;
+    // 获取接口信息
+    options = lib.extend(true, {}, config.get('url'));
+    // 添加模块名参数
+    options.search = search;
+    // 指定接口类型
+    options.pathname = config.get('url.pathname') + type;
+    // 返回格式化后的接口
+    return uri.format(options);
+}
+
 // 注册命令
 this.reg('create')
 this.reg('publish')
 this.reg('install')
 this.reg('remove')
+this.reg('info')

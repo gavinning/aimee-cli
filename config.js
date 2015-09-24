@@ -21,6 +21,15 @@ function config() {
             rep: path.join(home, folder, 'rep')
         },
 
+        url: {
+            protocol: 'http:',
+            hostname: '127.0.0.1',
+            pathname: '/app/aimee/api/',
+            port: 3000,
+            search: null,
+            slashes: true,
+        },
+
         // 项目中文件夹命名
         name: {
             pages: 'pages',
