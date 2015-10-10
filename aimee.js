@@ -93,10 +93,12 @@ this.url = function(type, search){
     var options;
     // 获取接口信息
     options = lib.extend(true, {}, config.get('url'));
-    // 添加模块名参数
-    options.search = search.indexOf('?') === 0 ? search : ('?' + search);
     // 指定接口类型
     options.pathname = config.get('url.pathname') + type;
+    // 添加模块名参数
+    if(search){
+        options.search = search.indexOf('?') === 0 ? search : ('?' + search);
+    }
     // 返回格式化后的接口
     return uri.format(options);
 }
@@ -107,3 +109,6 @@ this.reg('publish')
 this.reg('install')
 this.reg('remove')
 this.reg('info')
+this.reg('reg')
+this.reg('login')
+this.reg('logout')

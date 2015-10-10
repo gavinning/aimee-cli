@@ -27,6 +27,9 @@
     "rmdir": "^1.1.0",
     "touch": "^1.0.0",
     "vpm-config": "^1.0.0",
-    "vpm-package": "^1.0.0"
+    "vpm-http": "^1.0.0",
+    "vpm-package": "^1.0.1",
+    "vpm-rc": "^1.0.0",
+    "vpm-user": "^1.0.0"
   }
 }
