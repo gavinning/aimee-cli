@@ -4,7 +4,8 @@ var touch = require('touch');
 var commander = require('commander');
 var config = require('vpm-config');
 var color = require('bash-color');
-var uri = require('url');
+var vpmrc = require('vpm-rc');
+var rc = vpmrc('.aimeerc');
 
 // 设置配置文件路径，必须优先独立配置
 config.set('config', path.join(__dirname, 'config.js'));
@@ -46,33 +47,6 @@ this.reg = function(id){
     return this;
 }
 
-// 根据配置规则创建目录和文件
-this.create = function(conf){
-    // process...
-    if(conf.flag === 'project'){
-        // 创建 project > src
-        conf.path = path.join(conf.path, 'src');
-        exports.log('Start  create', color.purple(conf.flag), color.green(conf.name), '...');
-    }
-
-    // Folder
-    conf.type === 'folder' && this.cli.create.folder(conf.path);
-    // Html
-    conf.type === 'html' && this.cli.create.html(conf.path);
-    // Text File
-    conf.type === 'text' && this.cli.create.file(conf.path);
-
-    // Aimee Page
-    conf.flag === 'page' && this.cli.create.app(conf.path, 'page');
-    // Aimee app
-    conf.flag === 'app' && this.cli.create.app(conf.path, 'app');
-
-    // 创建子级
-    conf.content && conf.content.forEach(function(item){
-        item.path = path.join(conf.path, item.name);
-        exports.create(item)
-    })
-}
 
 /**
  * 返回带有时间戳的日志
@@ -90,17 +64,22 @@ this.log = function(msg){
 
 // 返回接口
 this.url = function(type, search){
-    var options;
-    // 获取接口信息
-    options = lib.extend(true, {}, config.get('url'));
-    // 指定接口类型
-    options.pathname = config.get('url.pathname') + type;
-    // 添加模块名参数
-    if(search){
-        options.search = search.indexOf('?') === 0 ? search : ('?' + search);
-    }
-    // 返回格式化后的接口
-    return uri.format(options);
+    var arr = [];
+    arr.push(config.get('registry.host'))
+    arr.push(config.get('registry.pathname'))
+    arr.push(type)
+    arr.push(search ? search.indexOf('?') === 0 ? search : ('?' + search) : '')
+    return arr.join('')
+}
+
+// 检查是否已登录
+this.isLogin = function(){
+    return rc.get('user.auth') ? true : false;
+}
+
+// 获取rc配置
+this.config = function(name){
+    return rc.get(name)
 }
 
 // 注册命令

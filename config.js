@@ -2,6 +2,7 @@ var path = require('path');
 var home = process.env.HOME;
 var folder = '.aimee';
 var templateFolder = path.join(__dirname, 'template');
+var domain = 'http://gavinning2.kf0309.3g.qq.com';
 
 function config() {
     return {
@@ -21,13 +22,9 @@ function config() {
             rep: path.join(home, folder, 'rep')
         },
 
-        url: {
-            protocol: 'http:',
-            hostname: '127.0.0.1',
-            pathname: '/app/aimee/api/',
-            port: 3000,
-            search: null,
-            slashes: true,
+        registry: {
+            host: domain || 'http://127.0.0.1:3000',
+            pathname: '/app/aimee/api/'
         },
 
         // 项目中文件夹命名
