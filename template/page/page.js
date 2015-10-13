@@ -20,7 +20,7 @@ page.extend({
     },
 
     prerender: function(data, thisPage){
-        this.exports('header footer', function(app){
+        this.exports('header', function(app){
             app.init().setPage(thisPage).render();
         });
     }

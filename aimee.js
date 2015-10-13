@@ -13,7 +13,8 @@ config.set('config', path.join(__dirname, 'config.js'));
 // 检查是否存在 ~/.aimee 目录
 // TODO: 需要重建 ~/.aimee
 if(!lib.isDir(config.get('dir.cache'))){
-    return console.error('Error: 没有发现缓存目录')
+    lib.mkdir(config.get('dir.cache'))
+    // return console.error('Error: 没有发现缓存目录')
 }
 
 // 命令池，缓存已注册命令
@@ -81,6 +82,7 @@ this.isLogin = function(){
 this.config = function(name){
     return rc.get(name)
 }
+
 
 // 注册命令
 this.reg('create')
