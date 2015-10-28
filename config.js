@@ -36,14 +36,31 @@ function config() {
 
         // 模板文件，用于命令创建Aimee对象的模板
         template: {
+            // For index.html
             'html'          : path.join(templateFolder, 'index.html'),
+
+            // For app
             'appjs'         : path.join(templateFolder, 'app/app.js'),
             'appjade'       : path.join(templateFolder, 'app/app.jade'),
             'appless'       : path.join(templateFolder, 'app/app.less'),
             'appjsonjs'     : path.join(templateFolder, 'app/app.json.js'),
+            'appconfig'     : path.join(templateFolder, 'app/package.json'),
+
+            // For page
             'pagejs'        : path.join(templateFolder, 'page/page.js'),
             'pagejade'      : path.join(templateFolder, 'page/page.jade'),
             'pagejsonjs'    : path.join(templateFolder, 'page/page.json.js'),
+
+            // For less
+            'baseless'      : path.join(templateFolder, 'css/base.less'),
+            'skinless'      : path.join(templateFolder, 'css/skin.less'),
+            'commonless'    : path.join(templateFolder, 'css/common.less'),
+
+            // For js
+            'init'          : path.join(templateFolder, 'js/init.js'),
+            'modjs'         : path.join(templateFolder, 'js/mod.js'),
+            'runtimejs'     : path.join(templateFolder, 'js/runtime.js'),
+            'uzconfigjs'    : path.join(templateFolder, 'js/uzconfig.js')
         },
 
         types: {
@@ -51,99 +68,112 @@ function config() {
         },
 
         // 创建配置 => aimee create [options] <appname>
+        // 其所有属性都属于特殊Flag关键字
         create: {
-
-            // aimee init
-            // 用于初始化缓存目录 ~/.aimee
-            init: {
-                name: 'init',
-                type: 'folder',
-                flag: 'cache',
+            // Flag app
+            app: {
+                name: 'app',
+                replace: /^app\b/,
                 content: [
                     {
-                        // 文件名称
-                        name: folder,
-                        // 文件类型
-                        type: 'folder',
-                        // 文件路径
-                        path: path.join(home, folder),
-                        // 文件目录
-                        dirname: home
+                        path: 'app.js',
+                        template: 'appjs'
+                    },
+                    {
+                        path: 'app.jade',
+                        template: 'appjade'
+                    },
+                    {
+                        path: 'app.json.js',
+                        template: 'appjsonjs'
+                    },
+                    {
+                        path: 'app.less',
+                        template: 'appless'
+                    },
+                    {
+                        path: 'package.json',
+                        template: 'appconfig'
                     }
                 ]
             },
 
-            // Aimee-project配置项，aimee create命令会根据此配置创建Aimee-project
+            // Flag page
+            page: {
+                name: 'page',
+                replace: /^page\b/,
+                content: [
+                    {
+                        path: 'page.js',
+                        template: 'pagejs'
+                    },
+                    {
+                        path: 'page.jade',
+                        template: 'pagejade'
+                    },
+                    {
+                        path: 'page.json.js',
+                        template: 'pagejsonjs'
+                    }
+                ]
+            },
+
+            // Flag project
+            // Aimee create命令会根据此配置文件创建Flag
             project: {
                 // 项目名称，会被命令行参数覆盖
                 name: 'project',
-                // 文件类型，文件创建依据
-                type: 'folder',
-                // Aimee标记，用于创建特殊的Aimee对象，例如Aimee-page, Aimee-app
-                flag: 'project',
-                // Aimee.app依赖的模块，创建项目后会自动安装
+                // Flag默认依赖的模块，Flag创建后会自动安装
                 mods: ['aimee'],
                 // 文件内容
                 content: [
                     {
-                        name: 'index.html',
-                        type: 'html'
+                        path: 'uzconfig.js',
+                        template: 'uzconfigjs'
                     },
                     {
-                        name: 'uzconfig.js',
-                        type: 'text'
+                        path: 'src/index.html',
+                        template: 'html'
                     },
                     {
-                        name: 'js',
-                        type: 'folder'
+                        path: 'src/js/lib/mod.js',
+                        template: 'modjs'
                     },
                     {
-                        name: 'css',
-                        type: 'folder',
-                        content: [
-                            {
-                                name: 'lib',
-                                type: 'folder',
-                                content: [
-                                    {
-                                        name: 'base.less',
-                                        type: 'text'
-                                    },
-                                    {
-                                        name: 'reset.less',
-                                        type: 'text'
-                                    }
-                                ]
-                            }
-                        ]
+                        path: 'src/js/lib/runtime.js',
+                        template: 'runtimejs'
                     },
                     {
-                        name: 'images',
-                        type: 'folder'
+                        path: 'src/images',
+                        flag: 'Folder'
                     },
                     {
-                        name: 'pages',
-                        type: 'folder',
-                        content: [
-                            {
-                                name: 'home',
-                                flag: 'page',
-                            }
-                        ]
+                        path: 'src/modules',
+                        flag: 'Folder'
                     },
                     {
-                        name: 'modules',
-                        type: 'folder'
+                        path: 'src/pages/home',
+                        flag: 'page'
                     },
                     {
-                        name: 'widget',
-                        type: 'folder',
-                        content: [
-                            {
-                                name: 'header',
-                                flag: 'app'
-                            }
-                        ]
+                        path: 'src/widget/header',
+                        flag: 'app'
+                    },
+                    {
+                        path: 'src/pages/init.js',
+                        template: 'init'
+                    },
+                    {
+                        path: 'src/css/base.less',
+                        template: 'baseless',
+                    },
+                    {
+                        path: 'src/css/skin.less',
+                        template: 'skinless',
+                    },
+                    {
+                        path: 'src/css/common.less',
+                        template: 'commonless',
                     }
                 ]
             }

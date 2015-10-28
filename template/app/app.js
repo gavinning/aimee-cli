@@ -1,5 +1,5 @@
 /*!
- * <%= name %>
+ * <%= name %> For Aimeejs
  * https://github.com/gavinning/aimee
  *
  * Aimee-app
@@ -12,7 +12,11 @@ App = require('app');
 app = App.create({
     name: '<%= name %>',
     version: '1.0.0',
-    template: require('./<%= name %>.jade')
+    template: require('./<%= name %>.jade'),
+
+    prerender: function(){
+
+    }
 });
 
 module.exports = app;

@@ -1,5 +1,5 @@
 /*!
- * <%= name %>
+ * <%= name %> For Aimeejs
  * https://github.com/gavinning/aimee
  *
  * Aimee-page
@@ -20,9 +20,7 @@ page.extend({
     },
 
     prerender: function(data, thisPage){
-        this.exports('header', function(app){
-            app.init().setPage(thisPage).render();
-        });
+        this.exports('header')
     }
 });
 

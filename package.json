@@ -3,6 +3,9 @@
   "description": "Aimeejs命令行工具",
   "main": "aimee.js",
   "version": "1.0.0",
+  "bin": {
+    "aimee": "./bin/aimee"
+  },
   "scripts": {
     "test": "aimee -v"
   },
