@@ -55,13 +55,13 @@ this.reg = function(id){
  * @return  {String}      返回带有时间戳的日志
  * @example [example] this.log('123') => 10:23:20 > 123
  */
-this.log = function(msg){
-    var arr = [];
-    arr = arr.slice.call(arguments);
-    arr.unshift('>');
-    arr.unshift(lib.now('hh:mm:ss'));
-    console.log.apply(null, arr);
-}
+// this.log = function(msg){
+//     var arr = [];
+//     arr = arr.slice.call(arguments);
+//     arr.unshift('>');
+//     arr.unshift(lib.now('hh:mm:ss'));
+//     console.log.apply(null, arr);
+// }
 
 // 返回接口
 this.url = function(type, search){
