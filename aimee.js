@@ -80,6 +80,7 @@ this.config = function(name){
 // 注册命令
 this.reg('create')
 this.reg('remove')
+this.reg('update')
 this.reg('install')
 this.reg('publish')
 this.reg('info')
