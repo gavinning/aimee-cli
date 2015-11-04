@@ -4,7 +4,10 @@ aimee = require('aimee');
 router = require('router');
 aimee.config.set('env', 'mock');
 
+aimee
+    .reg('zepto')
+    .reg('autoscreen');
+
 router
-    .load('autoscreen')
     .option('pages/home')
     .action();

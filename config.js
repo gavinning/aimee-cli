@@ -124,7 +124,7 @@ function config() {
                 // 项目名称，会被命令行参数覆盖
                 name: 'project',
                 // Flag默认依赖的模块，Flag创建后会自动安装
-                mods: 'aimee pm app page mock autoscreen'.split(' '),
+                mods: 'aimee is extend guid config router class pm app page mock autoscreen base loading reset zepto'.split(' '),
                 // 文件内容
                 content: [
                     {
