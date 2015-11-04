@@ -28,6 +28,7 @@
     "commander": "^2.8.1",
     "linco.lab": "~0.0.13",
     "rmdir": "^1.1.0",
+    "thenjs": "^2.0.1",
     "touch": "^1.0.0",
     "tree-directory": "0.0.1",
     "vpm-config": "^1.0.0",

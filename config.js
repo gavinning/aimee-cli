@@ -124,7 +124,7 @@ function config() {
                 // 项目名称，会被命令行参数覆盖
                 name: 'project',
                 // Flag默认依赖的模块，Flag创建后会自动安装
-                mods: 'aimee pm page app mock autoscreen'.split(' '),
+                mods: 'aimee pm app page mock autoscreen'.split(' '),
                 // 文件内容
                 content: [
                     {
