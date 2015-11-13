@@ -1,6 +1,6 @@
 /*!
  * <%= name %> For Aimeejs
- * https://github.com/aimeejs/aimee
+ * https://github.com/gavinning/aimee
  *
  * Aimee-app
  * Date: <%= time %>
