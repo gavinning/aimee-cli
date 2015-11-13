@@ -2,11 +2,11 @@
     "name": "<%= name %>",
     "aimee": "app",
     "version": "1.0.0",
-    "description": "Aimeejs的app模块",
+    "description": "Aimeejs的<%= name %>模块",
     "main": "<%= name %>.js",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Aimeejs/app.git"
+        "url": "https://github.com/Aimeejs/<%= name %>.git"
     },
     "keywords": [
         "<%= name %>"
@@ -14,8 +14,8 @@
     "author": "somebody",
     "license": "GPL-3.0",
     "bugs": {
-        "url": "https://github.com/Aimeejs/app/issues"
+        "url": "https://github.com/Aimeejs/<%= name %>/issues"
     },
-    "homepage": "https://github.com/Aimeejs/app",
+    "homepage": "https://github.com/Aimeejs/<%= name %>",
     "dependencies": {}
 }

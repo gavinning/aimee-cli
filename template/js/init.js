@@ -1,3 +1,11 @@
+/*!
+ * init.js For <%= name %>
+ * https://github.com/aimeejs/aimee
+ *
+ * Aimee-app
+ * Date: <%= time %>
+ */
+
 var aimee, router;
 
 aimee = require('aimee');

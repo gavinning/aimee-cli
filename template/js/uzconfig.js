@@ -1,3 +1,11 @@
+/*!
+ * Config For UZ
+ * https://github.com/aimeejs/aimee
+ *
+ * Aimee-app
+ * Date: <%= time %>
+ */
+
 fis.config.set('deploy', {
     // 开发环境配置
     dev: {

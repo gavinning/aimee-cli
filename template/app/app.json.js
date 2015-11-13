@@ -1,6 +1,6 @@
 /*!
  * Mock data for mock.js
- * https://github.com/gavinning/aimee
+ * https://github.com/aimeejs/aimee
  *
  * Template
  * Date: <%= time %>
