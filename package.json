@@ -2,7 +2,7 @@
   "name": "aimee-cli",
   "description": "Aimeejs命令行工具",
   "main": "aimee.js",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "bin": {
     "aimee": "./bin/aimee"
   },
