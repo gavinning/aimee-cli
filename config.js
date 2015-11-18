@@ -51,6 +51,10 @@ function config() {
             'pagejade'      : path.join(templateFolder, 'page/page.jade'),
             'pagejsonjs'    : path.join(templateFolder, 'page/page.json.js'),
 
+            // For example-page
+            'e-pagejs'      : path.join(templateFolder, 'example/page.js'),
+            'e-pagejade'    : path.join(templateFolder, 'example/page.jade'),
+
             // For less
             'baseless'      : path.join(templateFolder, 'css/base.less'),
             'skinless'      : path.join(templateFolder, 'css/skin.less'),
@@ -118,6 +122,25 @@ function config() {
                 ]
             },
 
+            examlplePage: {
+                name: 'page',
+                replace: /^page\b/,
+                content: [
+                    {
+                        path: 'page.js',
+                        template: 'e-pagejs'
+                    },
+                    {
+                        path: 'page.jade',
+                        template: 'e-pagejade'
+                    },
+                    {
+                        path: 'page.json.js',
+                        template: 'pagejsonjs'
+                    }
+                ]
+            },
+
             // Flag project
             // Aimee create命令会根据此配置文件创建Flag
             project: {
@@ -153,7 +176,7 @@ function config() {
                     },
                     {
                         path: 'src/pages/home',
-                        flag: 'page'
+                        flag: 'examlplePage'
                     },
                     {
                         path: 'src/widget/header',
