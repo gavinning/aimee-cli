@@ -9,7 +9,7 @@
 fis.config.set('deploy', {
     // 开发环境配置
     dev: {
-        // 如果配置了receiver，fis会把文件逐个post到接收端上
+        // 如果配置了receiver，uz会把文件逐个post到接收端上
         receiver : 'http://domian.com/receiver',
         // 从产出的结果的static目录下找文件
         from : '/',
