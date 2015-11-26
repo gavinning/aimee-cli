@@ -14,7 +14,11 @@ config.set('config', path.join(__dirname, 'config.js'));
 // TODO: 需要重建 ~/.aimee
 if(!lib.isDir(config.get('dir.cache'))){
     lib.mkdir(config.get('dir.cache'))
-    // return console.error('Error: 没有发现缓存目录')
+}
+
+// 检查全局配置文件是否存在registry设置
+if(rc.get('user.registry')){
+    config.set('registry.host', rc.get('user.registry'))
 }
 
 // 命令池，缓存已注册命令
