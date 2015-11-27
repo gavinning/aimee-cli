@@ -6,6 +6,7 @@ var config = require('vpm-config');
 var color = require('bash-color');
 var vpmrc = require('vpm-rc');
 var rc = vpmrc('.aimeerc');
+root.aimee = this;
 
 // 设置配置文件路径，必须优先独立配置
 config.set('config', path.join(__dirname, 'config.js'));
