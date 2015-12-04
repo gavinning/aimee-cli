@@ -1,4 +1,5 @@
 var lib = require('./lib/lib');
+var fs = require('fs');
 var path = require('path');
 var touch = require('touch');
 var commander = require('commander');
@@ -7,6 +8,7 @@ var color = require('bash-color');
 var vpmrc = require('vpm-rc');
 var rc = vpmrc('.aimeerc');
 root.aimee = this;
+aimee.package = JSON.parse(fs.readFileSync('./package.json'));
 
 // 设置配置文件路径，必须优先独立配置
 config.set('config', path.join(__dirname, 'config.js'));
@@ -28,7 +30,9 @@ this.cli = {};
 // 命令执行入口
 this.run = function(argv){
     argv.length === 2 ? argv.push('--help') : argv;
-    commander.parse(argv)
+    commander
+        .option('-v, --version', 'output the version number', function(){ console.log(aimee.package.version) })
+        .parse(argv)
     return this;
 }
 
