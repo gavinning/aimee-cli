@@ -8,7 +8,7 @@ var color = require('bash-color');
 var vpmrc = require('vpm-rc');
 var rc = vpmrc('.aimeerc');
 root.aimee = this;
-aimee.package = JSON.parse(fs.readFileSync('./package.json'));
+aimee.package = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json')));
 
 // 设置配置文件路径，必须优先独立配置
 config.set('config', path.join(__dirname, 'config.js'));
