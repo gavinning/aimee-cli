@@ -20,9 +20,10 @@ if(!lib.isDir(config.get('dir.cache'))){
 }
 
 // 检查全局配置文件是否存在registry设置
-if(rc.get('user.registry')){
-    config.set('registry.host', rc.get('user.registry'))
+if(rc.get('registry')){
+    config.set('registry.host', rc.get('registry'))
 }
+// rc.set('registry', 'http://gavinning2.kf0309.3g.qq.com')
 
 // 命令池，缓存已注册命令
 this.cli = {};
