@@ -63,7 +63,10 @@ function config() {
             'init'          : path.join(templateFolder, 'js/init.js'),
             'modjs'         : path.join(templateFolder, 'js/mod.js'),
             'runtimejs'     : path.join(templateFolder, 'js/runtime.js'),
-            'uzconfigjs'    : path.join(templateFolder, 'js/uzconfig.js')
+            'uzconfigjs'    : path.join(templateFolder, 'js/uzconfig.js'),
+
+            // For aimee.json
+            'aimeejson'     :path.join(templateFolder, 'aimee.json')
         },
 
         types: {
@@ -152,6 +155,10 @@ function config() {
                     {
                         path: 'uzconfig.js',
                         template: 'uzconfigjs'
+                    },
+                    {
+                        path: 'aimee.json',
+                        template: 'aimeejson'
                     },
                     {
                         path: 'src/index.html',

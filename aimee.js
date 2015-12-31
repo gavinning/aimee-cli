@@ -88,6 +88,7 @@ this.config = function(name){
 
 
 // 注册命令
+this.reg('init')
 this.reg('create')
 this.reg('remove')
 this.reg('update')

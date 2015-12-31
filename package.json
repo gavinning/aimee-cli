@@ -26,7 +26,9 @@
   "dependencies": {
     "bash-color": "0.0.3",
     "commander": "^2.8.1",
+    "json-format": "^0.1.1",
     "linco.lab": "~0.0.13",
+    "prompt": "^0.2.14",
     "rmdir": "^1.1.0",
     "thenjs": "^2.0.1",
     "touch": "^1.0.0",
