@@ -2,7 +2,7 @@
   "name": "aimee-cli",
   "description": "Aimeejs命令行工具",
   "main": "aimee.js",
-  "version": "1.0.13",
+  "version": "1.1.0",
   "bin": {
     "aimee": "./bin/aimee"
   },
@@ -30,6 +30,7 @@
     "linco.lab": "~0.0.13",
     "prompt": "^0.2.14",
     "rmdir": "^1.1.0",
+    "semver": "^5.1.0",
     "thenjs": "^2.0.1",
     "touch": "^1.0.0",
     "tree-directory": "0.0.1",

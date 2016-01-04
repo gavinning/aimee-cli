@@ -8,7 +8,7 @@ var color = require('bash-color');
 var vpmrc = require('vpm-rc');
 var rc = vpmrc('.aimeerc');
 root.aimee = this;
-aimee.package = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json')));
+aimee.package = require(path.join(__dirname, 'package.json'));
 
 // 设置配置文件路径，必须优先独立配置
 config.set('config', path.join(__dirname, 'config.js'));
@@ -28,7 +28,31 @@ if(rc.get('registry')){
 // 命令池，缓存已注册命令
 this.cli = {};
 
-// 命令执行入口
+/**
+ * 重要的
+ * 默认生成版本前缀
+ * 用于semver解析需要安装的版本
+ * 所有更新依赖的地方需要引用此对象
+ * @type {String}
+ */
+this.versionPrefix = '~';
+
+/**
+ * 包装需要设置前缀的版本号
+ * @param   {String}  string 需要包装的版本号
+ * @return  {String}         this.versionPrefix + string
+ * @example this.setVersionPrefix('1.0.0') // => ~1.0.0
+ */
+this.setVersionPrefix = function(string){
+    return this.versionPrefix + string;
+}
+
+
+/**
+ * 命令执行入口
+ * @param   {Array}  argv 命令行参数
+ * @example this.run([])
+ */
 this.run = function(argv){
     argv.length === 2 ? argv.push('--help') : argv;
     commander
@@ -58,15 +82,7 @@ this.reg = function(id){
     return this;
 }
 
-
-/**
- * 返回带有时间戳的日志
- * @param   {String}  msg 日志信息
- * @return  {String}      返回带有时间戳的日志
- * @example [example] this.log('123') => 10:23:20 > 123
- */
-
-// 返回接口
+// 返回Server接口
 this.url = function(type, search){
     var arr = [];
     arr.push(config.get('registry.host'))
