@@ -5,6 +5,7 @@
  * Aimee-app
  * Date: <%= time %>
  */
+var path = require('path');
 
 fis.config.set('deploy', {
     // 开发环境配置
@@ -31,6 +32,6 @@ fis.config.set('deploy', {
         // 从产出的结果的static目录下找文件
         from : '/',
         // 发布指定的文件
-        to : 'dest'
+        to : path.join(__dirname, 'dest')
     }
 });
