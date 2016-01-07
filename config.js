@@ -6,8 +6,10 @@ var templateFolder = path.join(__dirname, 'template');
 function config() {
     return {
 
+        // !
         charset: 'utf-8',
 
+        // !
         dir: {
             // 项目真实目录
             project: './src',
@@ -21,19 +23,27 @@ function config() {
             rep: path.join(home, folder, 'rep')
         },
 
+        // !
         registry: {
             host: 'http://127.0.0.1:3000',
-            pathname: '/app/aimee/api/'
+            pathname: '/g/aimee/api/'
         },
 
-        // 项目中文件夹命名
+        // !
+        urls: {
+            reg: '/g/user/api/reg',
+            login: '/g/user/api/login'
+        },
+
+        // ! 项目中文件夹命名
         name: {
             pages: 'pages',
             widget: 'widget',
-            modules: 'modules'
+            modules: 'modules',
+            configFile: 'aimee.json'
         },
 
-        // 模板文件，用于命令创建Aimee对象的模板
+        // ! 模板文件，用于命令创建Aimee对象的模板
         template: {
             // For index.html
             'html'          : path.join(templateFolder, 'index.html'),
@@ -66,14 +76,10 @@ function config() {
             'uzconfigjs'    : path.join(templateFolder, 'js/uzconfig.js'),
 
             // For aimee.json
-            'aimeejson'     :path.join(templateFolder, 'aimee.json')
+            'aimeejson'     : path.join(templateFolder, 'aimee.json')
         },
 
-        types: {
-
-        },
-
-        // 创建配置 => aimee create [options] <appname>
+        // ! 创建配置 => aimee create [options] <appname>
         // 其所有属性都属于特殊Flag关键字
         create: {
             // Flag app
@@ -96,15 +102,11 @@ function config() {
                     {
                         path: 'app.less',
                         template: 'appless'
-                    },
-                    {
-                        path: 'package.json',
-                        template: 'appconfig'
                     }
                 ]
             },
 
-            // Flag page
+            // ! Flag page
             page: {
                 name: 'page',
                 replace: /^page\b/,
@@ -143,7 +145,7 @@ function config() {
                 ]
             },
 
-            // Flag project
+            // ! Flag project
             // Aimee create命令会根据此配置文件创建Flag
             project: {
                 // 项目名称，会被命令行参数覆盖

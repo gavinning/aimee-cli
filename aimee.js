@@ -11,7 +11,8 @@ root.aimee = this;
 aimee.package = require(path.join(__dirname, 'package.json'));
 
 // 设置配置文件路径，必须优先独立配置
-config.set('config', path.join(__dirname, 'config.js'));
+// config.set('config', path.join(__dirname, 'config.js'));
+config.init(path.join(__dirname, 'config.js'))
 
 // 检查是否存在 ~/.aimee 目录
 // TODO: 需要重建 ~/.aimee
