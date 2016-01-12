@@ -25,7 +25,7 @@ function config() {
 
         // !
         registry: {
-            host: 'http://127.0.0.1:3000',
+            host: 'http://aimee.ilinco.com',
             pathname: '/g/aimee/api/'
         },
 
