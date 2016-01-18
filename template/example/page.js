@@ -20,7 +20,7 @@ page.extend({
     },
 
     prerender: function(data, thisPage){
-        this.exports('helloworld')
+        this.exports('form')
     }
 });
 
