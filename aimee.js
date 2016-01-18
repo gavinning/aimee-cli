@@ -8,6 +8,7 @@ var color = require('bash-color');
 var vpmrc = require('vpm-rc');
 var rc = vpmrc('.aimeerc');
 root.aimee = this;
+// 读取Aimee-cli/package.json
 aimee.package = require(path.join(__dirname, 'package.json'));
 
 // 设置配置文件路径，必须优先独立配置

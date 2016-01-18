@@ -1,6 +1,5 @@
 {
     "name": "<%= name %>",
-    "aimee": "app",
     "version": "1.0.0",
     "description": "Aimeejs的<%= name %>模块",
     "main": "<%= name %>.js",

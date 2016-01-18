@@ -53,7 +53,7 @@ function config() {
             'appjade'       : path.join(templateFolder, 'app/app.jade'),
             'appless'       : path.join(templateFolder, 'app/app.less'),
             'appjsonjs'     : path.join(templateFolder, 'app/app.json.js'),
-            'appconfig'     : path.join(templateFolder, 'app/package.json'),
+            'appconfig'     : path.join(templateFolder, 'app/aimee.json'),
 
             // For page
             'pagejs'        : path.join(templateFolder, 'page/page.js'),
