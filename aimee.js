@@ -104,6 +104,11 @@ this.config = function(name){
     return rc.get(name)
 }
 
+this.error = {};
+this.error.msg = {
+    '1000': '网络连接异常，请检查网络或内网限制策略'
+}
+
 
 // 注册命令
 this.reg('init')
