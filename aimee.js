@@ -7,7 +7,13 @@ var config = require('vpm-config');
 var color = require('bash-color');
 var vpmrc = require('vpm-rc');
 var rc = vpmrc('.aimeerc');
+
+
 root.aimee = this;
+// 读取 ~/.aimeerc 配置文件
+aimee.rc = rc.get();
+aimee.rc.core = aimee.rc.core || {};
+aimee.rc.user = aimee.rc.user || {};
 // 读取Aimee-cli/package.json
 aimee.package = require(path.join(__dirname, 'package.json'));
 
@@ -22,10 +28,9 @@ if(!lib.isDir(config.get('dir.cache'))){
 }
 
 // 检查全局配置文件是否存在registry设置
-if(rc.get('registry')){
-    config.set('registry.host', rc.get('registry'))
+if(aimee.rc.registry){
+    config.set('registry.host', aimee.rc.registry)
 }
-// rc.set('registry', 'http://gavinning2.kf0309.3g.qq.com')
 
 // 命令池，缓存已注册命令
 this.cli = {};

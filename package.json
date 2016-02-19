@@ -2,7 +2,7 @@
   "name": "aimee-cli",
   "description": "Aimeejs命令行工具",
   "main": "aimee.js",
-  "version": "1.2.3",
+  "version": "1.2.5",
   "bin": {
     "aimee": "./bin/aimee"
   },
@@ -29,13 +29,14 @@
     "json-format": "^0.1.1",
     "linco.lab": "~0.0.13",
     "prompt": "^0.2.14",
+    "request": "^2.69.0",
     "rmdir": "^1.1.0",
     "semver": "^5.1.0",
     "thenjs": "^2.0.1",
     "touch": "^1.0.0",
     "tree-directory": "0.0.1",
     "vpm-config": "^1.0.0",
-    "vpm-http": "^1.0.0",
+    "vpm-http": "^2.0.0",
     "vpm-package": "^1.0.1",
     "vpm-rc": "^1.0.0",
     "vpm-user": "^1.0.0"
