@@ -55,6 +55,10 @@ function config() {
             'appjsonjs'     : path.join(templateFolder, 'app/app.json.js'),
             'appconfig'     : path.join(templateFolder, 'app/aimee.json'),
 
+            // For es6
+            'es6app'         : path.join(templateFolder, 'app/app.es6'),
+            'es6page'         : path.join(templateFolder, 'page/page.es6'),
+
             // For page
             'pagejs'        : path.join(templateFolder, 'page/page.js'),
             'pagejade'      : path.join(templateFolder, 'page/page.jade'),
@@ -106,6 +110,29 @@ function config() {
                 ]
             },
 
+            es6app: {
+                name: 'es6app',
+                replace: /^es6app\b/,
+                content: [
+                    {
+                        path: 'app.es6',
+                        template: 'es6app'
+                    },
+                    {
+                        path: 'app.jade',
+                        template: 'appjade'
+                    },
+                    {
+                        path: 'app.json.js',
+                        template: 'appjsonjs'
+                    },
+                    {
+                        path: 'app.less',
+                        template: 'appless'
+                    }
+                ]
+            },
+
             // ! Flag page
             page: {
                 name: 'page',
@@ -114,6 +141,26 @@ function config() {
                     {
                         path: 'page.js',
                         template: 'pagejs'
+                    },
+                    {
+                        path: 'page.jade',
+                        template: 'pagejade'
+                    },
+                    {
+                        path: 'page.json.js',
+                        template: 'pagejsonjs'
+                    }
+                ]
+            },
+
+            // ! Flag page
+            es6page: {
+                name: 'es6page',
+                replace: /^es6page\b/,
+                content: [
+                    {
+                        path: 'page.es6',
+                        template: 'es6page'
                     },
                     {
                         path: 'page.jade',

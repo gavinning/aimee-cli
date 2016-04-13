@@ -19,7 +19,7 @@ page.extend({
         dataType: 'json'
     },
 
-    prerender: function(data, thisPage){
+    prerender: function(data, page){
         this.exports('form')
     }
 });
