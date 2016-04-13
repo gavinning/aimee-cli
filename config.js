@@ -112,7 +112,7 @@ function config() {
 
             es6app: {
                 name: 'es6app',
-                replace: /^es6app\b/,
+                replace: /^app\b/,
                 content: [
                     {
                         path: 'app.es6',
@@ -156,7 +156,7 @@ function config() {
             // ! Flag page
             es6page: {
                 name: 'es6page',
-                replace: /^es6page\b/,
+                replace: /^page\b/,
                 content: [
                     {
                         path: 'page.es6',
