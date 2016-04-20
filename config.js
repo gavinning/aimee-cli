@@ -13,8 +13,8 @@ function config() {
         dir: {
             // 项目真实目录
             project: './src',
-            // 测试命令目录
-            command: './lib/',
+            // 命令目录
+            command: './commands/',
             // 真实命令前缀
             commandPrefix: 'aimee-command-',
             // 本地aimee缓存目录

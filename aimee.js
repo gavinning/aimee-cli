@@ -1,31 +1,27 @@
-var lib = require('./lib/lib');
 var fs = require('fs');
 var path = require('path');
 var touch = require('touch');
-var commander = require('commander');
-var config = require('vpm-config');
 var color = require('bash-color');
-var vpmrc = require('vpm-rc');
-var rc = vpmrc('.aimeerc');
-
+var config = require('vpm-config');
+var commander = require('commander');
+var lib = require('./lib/lib');
 
 root.aimee = this;
+
 // 读取 ~/.aimeerc 配置文件
-aimee.rc = rc.get();
-aimee.rc.core = aimee.rc.core || {};
-aimee.rc.user = aimee.rc.user || {};
+aimee.rc = lib.getRC();
+
 // 读取Aimee-cli/package.json
 aimee.package = require(path.join(__dirname, 'package.json'));
 
 // 设置配置文件路径，必须优先独立配置
-// config.set('config', path.join(__dirname, 'config.js'));
 config.init(path.join(__dirname, 'config.js'))
 
-// 检查是否存在 ~/.aimee 目录
-// TODO: 需要重建 ~/.aimee
-if(!lib.isDir(config.get('dir.cache'))){
-    lib.mkdir(config.get('dir.cache'))
-}
+// 创建 ~/.aimeerc
+lib.createAimeeRc();
+
+// 创建 ~/.aimee
+lib.createAimeeFolder();
 
 // 检查全局配置文件是否存在registry设置
 if(aimee.rc.registry){
@@ -53,7 +49,6 @@ this.versionPrefix = '~';
 this.setVersionPrefix = function(string){
     return this.versionPrefix + string;
 }
-
 
 /**
  * 命令执行入口
@@ -113,7 +108,6 @@ this.error = {};
 this.error.msg = {
     '1000': '网络连接异常，请检查网络或内网限制策略'
 }
-
 
 // 注册命令
 this.reg('init')

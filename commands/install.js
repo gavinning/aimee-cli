@@ -9,7 +9,7 @@ var semver = require('semver');
 var pm = require('thenjs');
 var Http = require('vpm-http');
 var http = Http.instance({'proxy': aimee.rc.core.proxy});
-var Msg = require('./msg');
+var Msg = require('../lib/msg');
 var errorMsg = new Msg;
 var successMsg = new Msg;
 // 默认版本依赖修饰符
