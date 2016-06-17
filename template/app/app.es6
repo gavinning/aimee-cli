@@ -13,7 +13,7 @@ app = App.create({
     name: '<%= name %>',
     template: require('./<%= name %>.jade'),
 
-    prerender: function(app){
+    prerender: (app) => {
 
     }
 });

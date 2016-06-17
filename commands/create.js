@@ -5,6 +5,8 @@ var config = require('vpm-config');
 var color = require('bash-color');
 var tree = require('tree-directory');
 var charset = 'utf-8';
+var Log = require('../lib/log');
+var post = new Log();
 
 exports.name = 'c';
 exports.alias = 'create';
@@ -62,7 +64,6 @@ exports.createFlag = function(src, flag){
 
     // 创建普通Flag关键字
     exports.flag(app);
-
 }
 
 /**
@@ -92,7 +93,7 @@ exports.createTemplate = function(file){
 
 // 分离Flag: [app, page] 创建日志，核心还是 this.createFlag
 exports.createApp = function(name, flag){
-    // console.log(exports, 199)
+    // post.log(exports, 199)
     // exports.createFlag(name, flag)
 
     if(exports.es6){
@@ -102,58 +103,86 @@ exports.createApp = function(name, flag){
         exports.createFlag(name, flag)
     }
 
-    console.log(color.blue(name))
-    console.log(color.green(tree.sync(name).str))
-    console.log('Create', color.purple(flag), color.blue(name), 'success...')
+    post.log(color.blue(name))
+    post.log(color.green(tree.sync(name).str))
+    post.log('Create', color.purple(flag), color.blue(name), 'success...')
 }
 
-// 启动创建项目
-exports.project = function(name){
+/**
+ * 创建项目
+ * @param   {String}  name          要创建的项目名称
+ * @param   {String}  projectPath   创建项目的根路径
+ * @param   {Boolean} silenced      是否以静默模式创建，静默模式不输出日志
+ * @example this.project('pro', process.cwd(), true)
+ */
+exports.project = function(name, projectPath, silenced, fn){
     var folder;
     var project = {};
     var flag = 'project';
     var depend = config.get('create.project.mods');
 
-    if(!name) return console.log('Error: 缺少项目名称');
+    if(!name) return post.log('Error: 缺少项目名称');
 
-    project.path = name;
+    // 项目创建路径
+    projectPath = projectPath || process.cwd();
+
+    // 检查项目名称为.的情况
+    if(name === '.'){
+        name = path.basename(projectPath);
+        projectPath = path.dirname(projectPath);
+    }
+
+    if(typeof silenced === 'function'){
+        fn = silenced;
+        silenced = false;
+    }
+
+    // 静默模式，无日志
+    silenced ? post.silenced = true : post.silenced = false;
+    fn = fn || function(){};
+
+    // project.path = name;
+    project.path = path.join(projectPath, name);
     project.flag = flag;
+
+    // return post.log(project)
 
     // 检查目标路径是否已存在 | Folder
     if(lib.isDir(project.path)){
         folder = lib.dir(project.path);
         if(folder.files.length || folder.folders.length){
-            return console.log('Error: Folder', name, 'is exist, and it is not empty')
+            return post.log('Error: Folder', name, 'is exist, and it is not empty')
         }
     }
 
     // 检查目标路径是否已存在 | File
     if(lib.isFile(project.path)){
-        return console.log('Error: File', name, 'is exist')
+        return post.log('Error: File', name, 'is exist')
     }
 
     // 交接给创建者
-    exports.createFlag(name, project.flag);
-    console.log('Start create project', color.blue(name) + '...')
-    console.log(color.blue(name))
-    console.log(color.green(tree.sync(name).str))
-    console.log('Start install apps...')
+    exports.createFlag(project.path, project.flag);
+    post.log('Start create project', color.blue(name) + '...')
+    post.log(color.blue(name))
+    post.log(color.green(tree.sync(name).str))
+    post.log('Start install apps...')
 
     // 安装依赖模块
-    exports.aimee.cli.install.install(exports.aimee.cli.install.parse(depend, path.join(name, 'src/modules')),
+    exports.aimee.cli.install.install(exports.aimee.cli.install.parse(depend, path.join(project.path, 'src/modules')),
         function(succ, error, deps){
             // 打印成功信息
-            succ.length > 0 && console.log(succ.join('\n'))
+            succ.length > 0 && post.log(succ.join('\n'))
             // 打印错误信息
-            error.length > 0 && console.log(error.join('\n'))
+            error.length > 0 && post.log(error.join('\n'))
             // 打印创建成功信息
-            console.log('Create', color.purple(project.flag), color.blue(name), 'success...')
+            post.log('Create', color.purple(project.flag), color.blue(name), 'success...')
             // 尝试更新app依赖信息到project/aimee.json中
             try{
-                exports.aimee.cli.install.updateDependencies(path.join(process.cwd(), project.path, 'aimee.json'), deps)
+                exports.aimee.cli.install.updateDependencies(path.join(project.path, 'aimee.json'), deps)
             }catch(e){
-                console.log(color.red('error: ' + e.message))
+                post.log(color.red('error: ' + e.message))
             }
+            fn();
         }
     );
 }
@@ -164,8 +193,8 @@ exports.reg = function(commander){
         .command(this.name)
         .alias(this.alias)
         .description(this.description)
-        .option('-p, --page    [name]', 'create page', this.createApp, 'page', 899)
-        .option('-w, --widget  [name]', 'create widget', this.createApp, 'app', 799)
+        .option('-p, --page    [name]', 'create page', this.createApp, 'page')
+        .option('-w, --widget  [name]', 'create widget', this.createApp, 'app')
         .option('-e, --es6', 'use es6 model', function(){
             exports.es6 = true
         })

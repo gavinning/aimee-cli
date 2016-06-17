@@ -19,7 +19,9 @@ page.extend({
         dataType: 'json'
     },
 
-    prerender: (data, page) => page.exports('header')
+    prerender: function(data, page){
+    	this.exports('header')
+    }
 });
 
 module.exports = page;

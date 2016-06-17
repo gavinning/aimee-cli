@@ -5,8 +5,10 @@ var color = require('bash-color');
 var config = require('vpm-config');
 var commander = require('commander');
 var lib = require('./lib/lib');
+var vpmrc = require('vpm-rc');
+var rc = vpmrc('.aimeerc');
 
-root.aimee = this;
+global.aimee = this;
 
 // 读取 ~/.aimeerc 配置文件
 aimee.rc = lib.getRC();
@@ -120,3 +122,6 @@ this.reg('info')
 this.reg('reg')
 this.reg('login')
 this.reg('logout')
+
+
+module.exports = this;

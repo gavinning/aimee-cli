@@ -5,8 +5,6 @@ var color = require('bash-color');
 var lib = require('linco.lab').lib;
 var package = require('vpm-package');
 var Config = require('vpm-config');
-var vpmrc = require('vpm-rc');
-var rc = vpmrc('.aimeerc');
 var configFileName = Config.get('name.configFile');
 var Http = require('vpm-http');
 var http = Http.instance({'proxy': aimee.rc.core.proxy});
@@ -70,6 +68,7 @@ exports.check = function(){
         return true;
     }
     catch(e){
+        throw e
         console.error(color.red('error: ' + e.message));
         return false;
     }

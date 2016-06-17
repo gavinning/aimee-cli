@@ -198,7 +198,7 @@ function config() {
                 // 项目名称，会被命令行参数覆盖
                 name: 'project',
                 // Flag默认依赖的模块，Flag创建后会自动安装
-                mods: 'aimee emmet is extend guid config router class pm app page mock autoscreen base loading reset zepto swipe form'.split(' '),
+                mods: 'aimee emmet is extend guid config router class pm app page mock autoscreen base loading reset zepto'.split(' '),
                 // 文件内容
                 content: [
                     {
@@ -231,7 +231,7 @@ function config() {
                     },
                     {
                         path: 'src/pages/home',
-                        flag: 'examlplePage'
+                        flag: 'page'
                     },
                     {
                         path: 'src/widget/header',
