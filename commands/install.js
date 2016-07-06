@@ -136,6 +136,7 @@ exports.install = function(dep, arr, fn){
 
         // 查询App相关信息
         exports.aimee.cli.info.query(app.name, function(err, res, msg){
+
             if(err) return cont(err);
 
             // 服务器不存在该模块
@@ -146,7 +147,12 @@ exports.install = function(dep, arr, fn){
 
             // 查询成功，安装模块的最新版本
             if(res.statusCode === 200){
-                res = JSON.parse(msg);
+                try{
+                    res = JSON.parse(msg);
+                }catch(e){
+                    console.log(msg);
+                    throw new Error(color.red('连接服务器失败，请检查网络！'))
+                }
                 app.version = app.version || res.version;
 
                 // 检查服务器是否存在当前版本
