@@ -23,6 +23,11 @@ function config() {
             rep: path.join(home, folder, 'rep')
         },
 
+        // 过滤不需要打包的文件
+        zip: {
+            filter: ['**/node_modules/**', './node_modules/**', '.git/**']
+        },
+
         // !
         registry: {
             host: 'http://aimee.ilinco.com',

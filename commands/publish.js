@@ -78,7 +78,7 @@ exports.package = function(fn){
     var zip = this.info();
     // 检查是否存在app文件夹，不存在则创建
     lib.isDir(zip.folder) || lib.mkdir(zip.folder);
-    package.zip('./', zip.src, fn)
+    package.zip('./', zip.src, {ignore: Config.get('zip.filter') }, fn)
 }
 
 // 提交模块
