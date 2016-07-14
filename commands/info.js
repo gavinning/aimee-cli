@@ -43,7 +43,12 @@ exports.reg = function(commander){
                 }
 
                 if(res.statusCode === 200){
-                    return console.log(JSON.parse(msg))
+                    try{
+                        return console.log(JSON.parse(msg))
+                    }
+                    catch(e){
+                        return console.log('connect ECONNREFUSED, Maybe need a proxy')
+                    }
                 }
 
                 return console.log(res.statusCode, msg)

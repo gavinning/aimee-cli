@@ -85,8 +85,36 @@ exports.package = function(fn){
 exports.publish = function(fn){
     var user = exports.aimee.config('user');
 
-    // 打包
+    // Upload By Stream
+    // exports.package(function(e, filepath){
+    //     var options = {};
+    //     var config = exports.config();
+    //     if(e) throw e;
+    //     // 获取提交api地址
+    //     options.url = exports.aimee.url('publish');
+    //     // 创建自定义headers
+    //     options.headers = {};
+    //     options.headers.name = config.name;
+    //     options.headers.version = config.version;
+    //     options.headers.username = user.name;
+    //     options.headers.auth = user.auth;
+    //     // options.headers.username
+    //     // TODO: 这里要完善提交失败后删除缓存目录压缩包的功能
+    //     // TODO：包括非200的任何错误
+    //     http.upload(options, filepath, function(e, res, msg){
+    //         if(e) throw e;
+    //         if(res.statusCode === 200){
+    //             console.log(['+', config.name, '@', config.version, ' success.'].join(''))
+    //         }
+    //         else{
+    //             console.log(res.statusCode + ' ' + msg)
+    //         }
+    //     });
+    // });
+
+    // Upload By Form-data
     exports.package(function(e, filepath){
+        var opt = {};
         var options = {};
         var config = exports.config();
         if(e) throw e;
@@ -98,10 +126,13 @@ exports.publish = function(fn){
         options.headers.version = config.version;
         options.headers.username = user.name;
         options.headers.auth = user.auth;
+
+        opt.field = 'files';
+        opt.filepath = filepath;
         // options.headers.username
         // TODO: 这里要完善提交失败后删除缓存目录压缩包的功能
         // TODO：包括非200的任何错误
-        http.upload(options, filepath, function(e, res, msg){
+        http.form(options, opt, function(e, res, msg){
             if(e) throw e;
             if(res.statusCode === 200){
                 console.log(['+', config.name, '@', config.version, ' success.'].join(''))
@@ -110,7 +141,7 @@ exports.publish = function(fn){
                 console.log(res.statusCode + ' ' + msg)
             }
         });
-    });
+    })
 }
 
 // 命令注册核心
