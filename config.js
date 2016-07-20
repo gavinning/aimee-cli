@@ -61,8 +61,8 @@ function config() {
             'appconfig'     : path.join(templateFolder, 'app/aimee.json'),
 
             // For es6
-            'es6app'         : path.join(templateFolder, 'app/app.es6'),
-            'es6page'         : path.join(templateFolder, 'page/page.es6'),
+            'es6app'         : path.join(templateFolder, 'es6app/app.js'),
+            'es6page'         : path.join(templateFolder, 'es6page/page.js'),
 
             // For page
             'pagejs'        : path.join(templateFolder, 'page/page.js'),
@@ -120,7 +120,7 @@ function config() {
                 replace: /^app\b/,
                 content: [
                     {
-                        path: 'app.es6',
+                        path: 'app.js',
                         template: 'es6app'
                     },
                     {
@@ -164,7 +164,7 @@ function config() {
                 replace: /^page\b/,
                 content: [
                     {
-                        path: 'page.es6',
+                        path: 'page.js',
                         template: 'es6page'
                     },
                     {
@@ -236,11 +236,11 @@ function config() {
                     },
                     {
                         path: 'src/pages/home',
-                        flag: 'page'
+                        flag: 'es6page'
                     },
                     {
                         path: 'src/widget/header',
-                        flag: 'app'
+                        flag: 'es6app'
                     },
                     {
                         path: 'src/pages/init.js',
