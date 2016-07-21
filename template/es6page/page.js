@@ -25,7 +25,7 @@ class <%= name %> extends Page {
     }
 
     prerender(data) {
-
+        this.exports('header')
     }
 
     postrender(data) {

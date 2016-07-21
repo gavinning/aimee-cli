@@ -20,7 +20,7 @@ class <%= name %> extends App {
     // app渲染到页面之前执行，用于预处理渲染内容
     prerender(app) {
         // app为模块的实例
-        app.find('li').eq(0).addClass('selected');
+        // your code
     }
 
     // app渲染到页面之后执行，此时app还在内存中，不能获取宽度高度等与尺寸相关的属性
