@@ -17,6 +17,10 @@ class <%= name %> extends App {
         this.template = template;
     }
 
+    onload() {
+
+    }
+
     // app渲染到页面之前执行，用于预处理渲染内容
     prerender(app) {
         // app为模块的实例
