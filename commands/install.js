@@ -1,3 +1,4 @@
+var $ = require('co');
 var fs = require('fs');
 var path = require('path');
 var lib = require('linco.lab').lib;
@@ -6,7 +7,8 @@ var color = require('bash-color');
 var package = require('vpm-package');
 var JSONFormat = require('json-format');
 var semver = require('semver');
-var pm = require('thenjs');
+var Gre = require('gre');
+var gre = Gre.create();
 var Http = require('vpm-http');
 var http = Http.instance({'proxy': aimee.rc.core.proxy});
 var Msg = require('../lib/msg');
@@ -20,16 +22,15 @@ exports.alias = 'install';
 exports.description = 'install aimee app';
 
 // 解压到模块到目标目录
-exports.package = function(app, cont){
-    lib.mkdir(app.path);
+exports.package = function(app){
+    lib.mkdir(app.path)
     package.unzip(app.zip.path, app.path)
     successMsg.push(
         color.green('+') +
         color.green(app.name) +
         color.green('@') +
         color.green(app.version)
-    );
-    cont();
+    )
 }
 
 /**
@@ -39,26 +40,33 @@ exports.package = function(app, cont){
  * @param   {String}  app.version 模块版本
  * @example this.install({name: 'share', version: '1.0.0', path: '~/doc'});
  */
-exports.one = function(app, cont){
-    app.zip = {};
-    app.zip.name = lib.getZipName(app);
-    app.zip.path = path.join(config.get('dir.rep'), app.name, app.zip.name);
+exports.one = function(app){
+    return new Promise((resolve, reject) => {
+        // 如果app已安装，则忽略
+        // TODO: 可以完善为检查安装版本
+        if (!lib.isEmpty(app.path)) return resolve()
 
-    // 检查缓存目录是否已存在该模块
-    if(lib.isFile(app.zip.path)){
-        return exports.package(app, cont)
-    }
+        app.zip = {
+            name: lib.getZipName(app),
+            path: path.join(config.get('dir.rep'), app.name, lib.getZipName(app))
+        }
 
-    // 生成下载接口
-    app.url = exports.aimee.url('app', ['name=', app.name, '&', 'version=', app.version].join(''));
+        // 检查缓存目录是否已存在该模块
+        if (lib.isFile(app.zip.path)){
+            exports.package(app)
+            return resolve()
+        }
 
-    // 创建目标文件夹
-    lib.mkdir(path.dirname(app.zip.path));
-
-    // 从服务器安装
-    http.download(app.url, app.zip.path, function(e){
-        if(e) throw e;
-        exports.package(app, cont)
+        // 生成下载接口
+        app.url = exports.aimee.url('app', ['name=', app.name, '&', 'version=', app.version].join(''))
+        // 创建目标文件夹
+        lib.mkdir(path.dirname(app.zip.path))
+        // 从服务器安装
+        http.download(app.url, app.zip.path, function(err){
+            if (err) return reject(err)
+            exports.package(app)
+            resolve()
+        })
     })
 }
 
@@ -97,60 +105,29 @@ exports.outputHelp = function(){
     console.log('')
 }
 
-/**
- * 安装模块
- * @param   {Boolean}   dep 是否更新依赖，可选
- * @param   {Array}     arr 安装的app列表，必选
- * @param   {Function}  fn  安装成功回调，可选
- * @example this.install(true, [{name: app}], fn)
- */
-exports.install = function(dep, arr, fn){
-    var deps = [];
+// 从远程Server获取app信息
+function getAppinfo(app, deps) {
+    return new Promise((resolve, reject) => {
 
-    // 检查参数
-    if(Array.isArray(dep)){
-        fn = arr;
-        arr = dep;
-        dep = false;
-    }
-
-    // 检查模块安装位置是否已存在
-    pm.each(arr, function(cont, app){
-        if(lib.isEmpty(app.path)){
-            cont(null, app)
-        }
-        else{
-            errorMsg.push(
-                color.red('error:'),
-                app.name,
-                'install failure',
-                path.relative(process.cwd(), app.path),
-                'is exist.'
-            );
-            cont();
-        }
-    })
-    // 查询服务器是否存在该模块
-    .each(null, function(cont, app, succ, error){
-        if(!app) return cont()
+        if (!app) return resolve()
 
         // 查询App相关信息
         exports.aimee.cli.info.query(app.name, function(err, res, msg){
 
-            if(err) return cont(err);
+            if (err) return reject(err)
 
             // 服务器不存在该模块
             if(res.statusCode === 404){
-                errorMsg.push(color.red('error:'), app.name, 'is not found');
-                return cont();
+                errorMsg.push(color.red('error:'), app.name, 'is not found')
+                return resolve()
             }
 
             // 查询成功，安装模块的最新版本
             if(res.statusCode === 200){
                 try{
-                    res = JSON.parse(msg);
+                    res = JSON.parse(msg)
                 }catch(e){
-                    console.log(msg);
+                    console.log(e.message)
                     throw new Error(color.red('连接服务器失败，请检查网络！'))
                 }
                 app.version = app.version || res.version;
@@ -158,53 +135,100 @@ exports.install = function(dep, arr, fn){
                 // 检查服务器是否存在当前版本
                 if(res.versions.indexOf(app.version) >= 0){
                     // 缓存app信息，为依赖更新做准备
-                    deps.push(app);
+                    deps.push(app)
                     // 准备安装模块
-                    return cont(null, app)
+                    return resolve(app)
                 }
 
                 else {
                     // 删除已创建的路径
-                    lib.rm(app.path);
+                    lib.rm(app.path)
                     // 推送错误信息
-                    errorMsg.push(color.red('error:'), app.name+'@'+app.version, 'is not found');
-                    return cont();
+                    errorMsg.push(color.red('error:'), app.name+'@'+app.version, 'is not found')
+                    return resolve()
                 }
             }
         })
     })
+}
 
-    // 执行安装
-    .each(null, function(cont, app){
-        app ? exports.one(app, cont) : cont()
+// 获取要安装的App的版本信息
+function getAppVersion(app, aimeejson) {
+    return new Promise((resolve, reject) => {
+        exports.aimee.cli.info.query(app, function(err, res, msg){
+            var version, versions, lastVersion;
+
+            if (err) return reject(err)
+
+            try{
+                // 获取本地配置文件依赖版本号
+                version = aimeejson.dependencies[app];
+                // 获取服务器版本号列表
+                versions = JSON.parse(msg).versions;
+                // 确定最终安装版本
+                lastVersion = semver.maxSatisfying(versions, version);
+                // 缓存要安装的app版本
+                // 模拟命令行安装-组合为 app@version 使用 exports.parse 格式化
+                resolve(lastVersion ? [app, lastVersion].join('@') : app)
+            }catch(err){
+                reject(err)
+            }
+        })
     })
-    // 检查安装成功或失败消息
-    .then(function(cont){
-        // 检查回调
-        if(fn){
-            // 有回调则推送安装信息
-            fn(errorMsg.get(), successMsg.get(), deps);
+}
+
+/**
+ * 安装模块
+ * @param   {Boolean}   dep 是否更新依赖，可选
+ * @param   {Array}     arr 安装的app列表，必选
+ * @param   {Function}  fn  安装成功回调，可选
+ * @example this.install(true, [{name: app}], fn)
+ */
+exports.install = (dep, arr, fn) => {
+    var deps = [];
+
+    // 检查参数
+    if (Array.isArray(dep)) {
+        fn = arr;
+        arr = dep;
+        dep = false;
+    }
+
+    $.call(this, function *(){
+        try{
+            let i = 0;
+            let len = arr.length;
+
+            for(; i < len; i++){
+                let app = yield getAppinfo(arr[i], deps)
+                yield exports.one(app)
+            }
+
+            // 检查回调
+            if (fn) {
+                // 有回调则推送安装信息
+                fn(errorMsg.get(), successMsg.get(), deps);
+            }
+            else{
+                // 没有回调则打印安装信息
+                successMsg.get().length > 0 && console.log(successMsg.get().join('\n'))
+                errorMsg.get().length > 0 && console.log(errorMsg.get().join('\n'))
+            }
+
+            // 更新依赖信息
+            dep && exports.updateDependencies(lib.find('aimee.json'), deps);
         }
-        else{
-            // 没有回调则打印安装信息
-            successMsg.get().length > 0 && console.log(successMsg.get().join('\n'))
-            errorMsg.get().length > 0 && console.log(errorMsg.get().join('\n'))
+        catch(err){
+            // 检查网络异常
+            if(err && err.message.includes('connect ECONNREFUSED')){
+                gre.error(err.message)
+                gre.error('网络连接异常，请检查网络或内网限制策略')
+            }
+            else if(err){
+                gre.error(err.message)
+            }
         }
-        // 更新依赖信息
-        dep && exports.updateDependencies(lib.find('aimee.json'), deps);
-        cont()
     })
-    // Find error
-    .fail(function (cont, error) {
-        // 检查网络异常
-        if(error && error.message === 'connect ECONNREFUSED'){
-            console.log(error.message)
-            console.log(exports.aimee.error.msg[1000])
-        }
-        else if(err){
-            console.log(error.message)
-        }
-    });
 }
 
 /**
@@ -253,50 +277,32 @@ exports.updateDependencies = function(src, data){
 }
 
 // 根据aimee.json安装全部依赖模块
-exports.installDependencies = function(){
-    var arr = [];
-    var installList = [];
-    var aimeejson = require(lib.find('aimee.json'));
-    // 1.查询aimee.json
-    // 2.使用node-semver匹配正确的服务器版本
-    // 3.安装匹配的app版本到项目
+exports.installDependencies = () => {
+    $.call(this, function *(){
+        try{
+            let arr = [];
+            let installList = [];
+            let aimeejson = require(lib.find('aimee.json'));
 
-    // 查询本地依赖
-    lib.each(aimeejson.dependencies, function(key, val){
-        arr.push(key)
-    });
+            // 查询本地依赖
+            lib.each(aimeejson.dependencies, function(key, val){
+                arr.push(key)
+            })
 
-    // 查询并匹配app最终安装版本
-    pm.each(arr, function(cont, app){
-        exports.aimee.cli.info.query(app, function(err, res, msg){
-            var version, versions, lastVersion;
-            if(err){
-                cont(err)
+            let i = 0;
+            let len = arr.length;
+
+            for(; i < len; i++){
+                let app = yield getAppVersion(arr[i], aimeejson, installList)
+                installList.push(app)
             }
-            try{
-                // 获取本地配置文件依赖版本号
-                version = aimeejson.dependencies[app];
-                // 获取服务器版本号列表
-                versions = JSON.parse(msg).versions;
-                // 确定最终安装版本
-                lastVersion = semver.maxSatisfying(versions, version);
-                // 缓存要安装的app版本
-                // 模拟命令行安装-组合为 app@version 使用 exports.parse 格式化
-                installList.push(
-                    lastVersion ?
-                        [app, lastVersion].join('@') : app
-                );
-                cont()
-            }catch(err){
-                cont(err)
-            }
-        })
-    })
-    .then(function(cont){
-        exports.install(exports.parse(installList));
-    })
-    .fail(function(cont, err){
-        throw err
+
+            exports.install(exports.parse(installList))
+            console.log('install dependencies done.')
+        }
+        catch(err){
+            gre.error(err.message)
+        }
     })
 }
 

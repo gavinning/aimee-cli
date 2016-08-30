@@ -1,9 +1,9 @@
+var $ = require('co');
 var fs = require('fs');
 var path = require('path');
 var lib = require('linco.lab').lib;
 var prompt = require('prompt');
 var JSONFormat = require('json-format');
-var pm = require('thenjs');
 var initSchema;
 
 exports.name = 'init';
@@ -84,23 +84,16 @@ exports.findapp = function(){
     return deps;
 }
 
-/**
- * 创建 aimee.json
- * @param   {Boolean}  dep  是否更新本地已有app到aimee.json依赖
- * @example this.run()
- * @example this.run(true)
- */
-exports.run = function(dep){
-    // 创建 aimee.json 所需要的基础数据
-    pm(function(cont){
+// 创建Aimee app配置文件
+function createSchema() {
+    return new Promise((resolve, reject) => {
         // 启动aimee.json创建引导程序
         prompt.get(initSchema, function(err, res){
             var ret;
 
+            if (err) reject(err);
             // 检查进程中断
-            if(!res){
-                return console.log('Aborted.')
-            }
+            if (!res) return console.log('Aborted.');
 
             // 复制 res => ret
             ret = {
@@ -128,52 +121,67 @@ exports.run = function(dep){
                     bugs: path.join(res.repository.replace(/\.git$/, ''), 'issues')
                 }
 
-            cont(null, ret)
-        });
+            resolve(ret)
+        })
     })
-    // 检查是否需要添加添加本地依赖
-    .then(function(cont, ret){
-        dep ? ret.dependencies = exports.findapp() : ret;
-        cont(null, ret)
-    })
-    // 美化JSON数据
-    .then(function(cont, ret){
-        // 提示数据结构及目标文件路径
-        console.log('')
-        console.log('下列数据将会自动写入到(About to write to) :')
-        console.log(exports.target())
-        console.log('')
+}
 
-        // 美化JSON字符串
-        console.log(ret = JSONFormat(ret, {type: 'space', size: 2}))
-        console.log('')
-        cont(null, ret)
-    })
-    // 确认是否完成创建
-    .then(function(cont, ret){
-        // 最后确认是否确定创建aimee.json
+// 确认是否创建
+function createSchemaConfirm(ret) {
+    return new Promise((resolve, reject) => {
         prompt.get([{
             name: 'sure',
             description: 'It is ok ?:',
             default: 'yes'
-        }], function(err, result){
-            // 检查程序中断
-            if(!result || !result.sure){
+        }], function(err, res){
+            if (err) reject(err);
+
+            // 检查进程中断
+            if (!res || !res.sure) {
                 console.log('Aborted.')
             }
             // 创建aimee.json
-            else if(result.sure === 'yes'){
+            else if(res.sure === 'yes'){
                 exports.create(exports.target(), ret)
                 console.log('success.')
+                resolve()
             }
             else{
                 console.log('Aborted.')
-                cont();
+                resolve()
             }
-        });
+        })
     })
-    .fail(function(cont, err){
-        throw err;
+}
+
+/**
+ * 创建 aimee.json
+ * @param   {Boolean}  dep  是否更新本地已有app到aimee.json依赖
+ * @example this.run()
+ * @example this.run(true)
+ */
+exports.run = dep => {
+    $.call(this, function *(){
+        try{
+            let ret = yield createSchema();
+            dep ? ret.dependencies = exports.findapp() : ret;
+
+            // 提示数据结构及目标文件路径
+            console.log('')
+            console.log('下列数据将会自动写入到(About to write to) :')
+            console.log(exports.target())
+            console.log('')
+
+            // 美化JSON字符串
+            console.log(ret = JSONFormat(ret, {type: 'space', size: 2}))
+            console.log('')
+
+            // 询问用户是否确定创建
+            yield createSchemaConfirm(ret)
+        }
+        catch(err){
+            console.log('创建失败', err.message)
+        }
     })
 }
 

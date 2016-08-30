@@ -2,7 +2,7 @@
   "name": "aimee-cli",
   "description": "Aimeejs命令行工具",
   "main": "aimee.js",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "bin": {
     "aimee": "./bin/aimee"
   },
@@ -26,8 +26,10 @@
   "dependencies": {
     "aimee-class": "^1.2.1",
     "bash-color": "0.0.3",
+    "co": "^4.6.0",
     "commander": "^2.8.1",
     "glob": "^7.0.5",
+    "gre": "^0.1.1",
     "json-format": "^0.1.1",
     "linco.lab": "~0.0.13",
     "prompt": "^0.2.14",

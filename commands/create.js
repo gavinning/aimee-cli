@@ -7,6 +7,7 @@ var tree = require('tree-directory');
 var charset = 'utf-8';
 var Log = require('../lib/log');
 var post = new Log();
+var flags = ['File', 'Folder'];
 
 exports.name = 'c';
 exports.alias = 'create';
@@ -14,7 +15,6 @@ exports.description = 'create aimee project, page, widget';
 
 // 创建普通Flag关键字
 // 例如 Folder、File
-exports._flag = ['File', 'Folder'];
 exports.flag = function(app){
     // 创建文件夹
     if(app.flag === 'File'){
@@ -58,7 +58,7 @@ exports.createFlag = function(src, flag){
         // 创建文件
         file.template ?
             exports.createTemplate(file):
-            exports._flag.indexOf(file.flag) >= 0 && file.flag ?
+            flags.indexOf(file.flag) >= 0 && file.flag ?
                 exports.flag(file): exports.createFlag(file.path, file.flag);
     }):
 

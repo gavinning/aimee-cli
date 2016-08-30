@@ -1,10 +1,15 @@
+var $ = require('co');
 var fs = require('fs');
 var path = require('path');
 var color = require('bash-color');
 var lib = require('linco.lab').lib;
-var pm = require('thenjs');
+var Gre = require('gre');
+var gre = Gre.create();
 var config = require('vpm-config');
 var configFileName = config.get('name.configFile');
+var succ = [];
+var warn = [];
+var error = [];
 
 exports.name = 'u [appname]';
 exports.alias = 'update';
@@ -38,25 +43,43 @@ exports.parse = function(name){
     return app;
 }
 
-// 更新App
-exports.update = function(args){
-    var warn = [];
-    var error = [];
+function install(arr, args) {
+    return new Promise((resolve, reject) => {
+        aimee.cli.install.install(
+            aimee.cli.install.parse(arr),
+            function(err, success){
+                succ = succ.concat(success);
+                error = error.concat(err);
+                return resolve();
+        })
+    })
+}
 
-    // 遍历查询需要更新的App列表
-    pm.each(args, function(cont, name){
-        var app = exports.parse(name);
-        var _app;
+function remove(name) {
+    return new Promise((resolve, reject) => {
+        aimee.cli.remove.remove(aimee.cli.remove.parse([name]), function(err, name, version){
+            if(err) return reject(err)
+            version ?
+                console.log(color.green('-' + name + '@' + version)):
+                console.log(color.green('-' + name));
+            resolve()
+        })
+    })
+}
 
+function query(app) {
+    return new Promise((resolve, reject) => {
         // 从Server查询App相关信息
         exports.aimee.cli.info.query(app.name, function(err, res, msg){
-            if(err) return cont(err);
+            let _app;
+
+            if(err) return reject(err);
 
             // 服务器不存在该模块
             if(res.statusCode === 404){
                 // 写入到错误信息数组
                 error.push(color.red(app.name));
-                return cont();
+                return resolve();
             }
 
             // App信息查询成功
@@ -68,41 +91,45 @@ exports.update = function(args){
                 // 版本相同则不做更新操作，写入警告信息数组
                 if(app.version === _app.version){
                     warn.push(color.green(app.name));
-                    return cont();
+                    return resolve();
                 }
 
                 // 本地App版本与服务器版本不同时，执行App更新操作
                 // 删除本地模块，从服务器最新版App
-                else{
-                    aimee.cli.remove.remove(aimee.cli.remove.parse([name]), function(err, name, version){
-                        // if(err) return console.error('Error:', err.message);
-                        version ?
-                            console.log(color.green('-' + name + '@' + version)):
-                            console.log(color.green('-' + name));
-                        // 执行安装
-                        aimee.cli.install.install(aimee.cli.install.parse([name]), function(err, succ){
-                            // 提示信息汇总输出
-                            if(args.length === (succ.length + err.length + warn.length + error.length)){
-                                succ.length && console.log(succ.join('\n'));
-                                err.length && console.log(err.join('\n'));
-                                return cont();
-                            }
-                        })
-                    })
-                }
+                resolve(1);
             }
         })
     })
-    // 更新进程完成后显示警告与错误信息
-    .then(function(cont){
-        // 显示警告信息
-        warn.length && console.log(warn.join(color.green(', ')), 'is the latest version');
-        error.length && console.log(error.join(color.red(', ')), 'is not found from server');
+}
+
+// 更新App
+exports.update = args => {
+    $.call(this, function *(){
+        try{
+            let i = 0;
+            let len = args.length;
+            let installs = [];
+
+            for (; i < len; i++) {
+                let name = args[i];
+                let app = exports.parse(name);
+                let installFromServer = yield query(app);
+
+                if (installFromServer) {
+                    yield remove(name);
+                    installs.push(name);
+                }
+            }
+            yield install(installs, args);
+
+            succ.length && console.log(succ.join('\n'));
+            warn.length && console.log(warn.join(color.green(', ')), 'is the latest version');
+            error.length && console.log(error.join(color.red(', ')), 'is not found from server');
+        }
+        catch(err){
+            gre.error(err.message)
+        }
     })
-    // Find error 程序错误
-    .fail(function (cont, error) {
-        console.log(error.message)
-    });
 }
 
 // 命令注册核心
